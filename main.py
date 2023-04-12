@@ -1,27 +1,10 @@
 import pandas as pd
 import os
-import configparser
-import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--token",
-    "-t",
-    type = str
-)
-
-args = parser.parse_args()
 
 target_url = "https://web3.dgpa.gov.tw/WANT03FRONT/AP/WANTF00003.aspx?GETJOB=Y"
 
-on_github = False # True -> 在 github 運作; False -> 在 local 運作; 要啟用 action 時要記得換回 True
-
-if on_github:
-    line_token = args.token
-else:
-    config = configparser.ConfigParser()
-    config.read('line_token.ini')
-    line_token =  config["token"]["value"]
+on_github = False  # True -> 在 github 運作; False -> 在 local 運作; 要啟用 action 時要記得換回 True
 
 need_columns = ["ORG_NAME",  # 徵才機關
                 "RANK",  # 官職等
@@ -33,7 +16,8 @@ need_columns = ["ORG_NAME",  # 徵才機關
 
 
 if on_github:
-    df = pd.read_xml(target_url, parser='etree') # default parser = lxml, 但不相容 poetry 環境
+    # default parser = lxml, 但不相容 poetry 環境, 故另用 etree
+    df = pd.read_xml(target_url, parser='etree')
     df = df.loc[:, need_columns]
 
 else:

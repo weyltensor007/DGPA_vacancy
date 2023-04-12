@@ -1,0 +1,52 @@
+name: run main.py
+
+
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '12 8,20 * * *'
+
+jobs:
+  build:
+    name: my_action
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3
+        
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: setup poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.4
+
+      - name: poetry run main.py
+        run: |
+          poetry install
+          poetry run python main.py   
+
+      - name: commit files
+        run: |
+          git config --local user.email "weyltensor@gmail.com"
+          git config --local user.name "weyltensor007"
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
+          
+      - name: push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+        
+      - name: check result.html updated
+        if: ${{ github.event_name == 'push' }} && contains(github.event.head_commit.modified_files, 'result.html')
+        run: poetry run python line_notify.py -t "${{ secrets.LINE_TOKEN }}"
+      
+    # permissions: write-all
+    permissions:
+      contents: write
