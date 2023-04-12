@@ -4,7 +4,7 @@ import os
 
 target_url = "https://web3.dgpa.gov.tw/WANT03FRONT/AP/WANTF00003.aspx?GETJOB=Y"
 
-on_github = False  # True -> 在 github 運作; False -> 在 local 運作; 要啟用 action 時要記得換回 True
+on_github = True  # True -> 在 github 運作; False -> 在 local 運作; 要啟用 action 時要記得換回 True
 
 need_columns = ["ORG_NAME",  # 徵才機關
                 "RANK",  # 官職等

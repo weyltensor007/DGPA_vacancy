@@ -21,7 +21,7 @@ else:
 
 s = line_token.split(":")
 params = {
-    'message':"\nhello\nworld"
+    'message':"\n事求人清單有變更!\nhttps://reurl.cc/LNLxAK"
 }
 requests.post("https://notify-api.line.me/api/notify",
     headers = {s[0]:s[1][1:]}, params=params
